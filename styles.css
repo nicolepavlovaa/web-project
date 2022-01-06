@@ -11,6 +11,14 @@
   padding: 1%;
 }
 
+.fieldset {
+  border: none;
+  background: white;
+  border-radius: 1rem 1rem 1rem 1rem;
+  margin-top: 1rem;
+  padding: 0rem 3rem 2rem 3rem;
+}
+
 .btn {
   display: block;
   margin: 30px auto;
@@ -56,6 +64,10 @@
   margin-top: 10px;
 }
 
+.wrapper {
+  margin-bottom: 16px;
+}
+
 .checkbox-group {
   position: relative;
   padding: 15px 0 0;
@@ -93,6 +105,12 @@ label,
   border-bottom: 2px solid #009788;
 }
 
-body {
+.page {
   background-image: linear-gradient(#bff098, #6fd6ff);
+}
+
+.container {
+  background-color: white;
+  border-radius: 10px;
+  padding-top: 4em;
 }
