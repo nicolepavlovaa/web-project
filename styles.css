@@ -1,0 +1,98 @@
+.form {
+  display: block;
+  position: relative;
+  border: none;
+  border-radius: 0.25rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+  padding: 1%;
+}
+
+.btn {
+  display: block;
+  margin: 30px auto;
+  padding: 0;
+  width: 200px;
+  height: 40px;
+  font-size: 18px;
+  font-weight: 650;
+
+  overflow: hidden;
+
+  border-width: 0;
+  outline: none;
+  border-radius: 8px;
+  box-shadow: none;
+
+  background-color: #2ecc71;
+  color: #ecf0f1;
+
+  transition: background-color 0.3s;
+}
+
+.buttons {
+  display: flex;
+}
+
+.input {
+  font-family: inherit;
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid #d2d2d2;
+  outline: 0;
+  font-size: 16px;
+  color: #212121;
+  padding: 7px 0;
+  background: transparent;
+  transition: border-color 0.2s;
+}
+
+.form-group {
+  position: relative;
+  padding: 15px 0 0;
+  margin-top: 10px;
+}
+
+.checkbox-group {
+  position: relative;
+  padding: 15px 0 0;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.form__field::placeholder {
+  color: transparent;
+}
+
+.form__field:placeholder-shown ~ .form__label {
+  font-size: 16px;
+  cursor: text;
+  top: 20px;
+}
+
+label,
+.input:focus ~ .form__label {
+  position: relative;
+  display: block;
+  transition: 0.2s;
+  font-size: 16px;
+  color: #7e7d7d;
+}
+
+.input:focus ~ .form__label {
+  color: #009788;
+}
+
+.input:focus {
+  padding-bottom: 6px;
+  border-bottom: 2px solid #009788;
+}
+
+body {
+  background-image: linear-gradient(#bff098, #6fd6ff);
+}
