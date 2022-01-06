@@ -37,7 +37,7 @@
       <div class="fieldset">
         <div class="form-group">
           <label class="form__label" htmlFor="password">Password</label>
-          <input type="text" class="input" name="password" id="password" />
+          <input type="password" class="input" name="password" id="password" />
         </div>
       </div>
     </div>

@@ -45,6 +45,12 @@
   display: flex;
 }
 
+.buttons-and-text {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
 .input {
   font-family: inherit;
   width: 100%;
