@@ -1,19 +1,17 @@
 <?php
-// $servername = "localhost";
-// $username = "root";
-// $password = "AbC13579";
-// $database = "web-project";
-// $port = 3306;
-// $socket = '/opt/lampp/let/mysql/mysql.sock';
-
+$servername = "localhost";
+$username = "root";
+$password = "AbC13579";
+$database = "web_project";
 // Create connection
-// $conn = new mysqli($servername, $username, $password, $database, $port);
+$conn = new mysqli($servername, $username, $password, $database);
 
-// // Check connection
-// if ($conn->connect_error) {
-//   die("Connection failed: " . $conn->connect_error);
-// }
-// echo "Connected successfully";
+// Check connection
+if ($conn->connect_error) {
+  echo "$conn->connect_error";
+  die("Connection failed: " . $conn->connect_error);
+}
+echo "Connected successfully";
 
 ?>
 
@@ -118,8 +116,19 @@
 </head>
 
 <body class="page">
+  <img src="./logo.png" class="logo" />
   <form id="form" class="form" method="POST">
     <div>
+      <fieldset class="description-wrapper">
+        <div class="input-title">
+          <label class="form__label" htmlFor="title">Title</label>
+          <input type="text" class="input" name="title" id="title" />
+        </div>
+        <div>
+          <label class="form__label" htmlFor="description">Description</label>
+          <input type="text" class="input" name="description" id="description" />
+        </div>
+      </fieldset>
       <div id="container">&nbsp;</div>
     </div>
     <div class="buttons">
@@ -134,16 +143,19 @@
       $answers = $_POST['answers'];
       $types = $_POST['checkbox'];
 
+      $title = $_POST['title'];
+      $description = $_POST['description'];
+
       for ($i = 0; $i < count($questions); $i++) {
-        // send data to server
-        // echo $questions[$i];
-        // echo '<br>';
-        // echo $answers[$i];
-        // echo '<br>';
-        // echo $types[$i];
-        // echo '<br>';
-        // echo '<br>';
-        // echo '<br>';
+        $question = $questions[$i];
+        $is_multiple_choice = $types[$i] == 'on' ?  true : false;
+        $question_answers = $answers[$i];
+        // TODO: change later to real user id
+        $user_id = 1;
+
+        mysqli_query($conn, "INSERT INTO forms(title, description, created_by) VALUES ($title, $description, $user_id);");
+        $form_id = mysqli_insert_id($conn);
+        mysqli_query($conn, "INSERT INTO questions(question, is_multiple_choice, answers, form_id, created_by) VALUES ($question, $is_multiple_choice, $question_answers, $form_id, $user_id);");
       }
     }
     ?>

@@ -70,6 +70,18 @@
   margin-top: 10px;
 }
 
+.description-wrapper {
+  border: none;
+  background: white;
+  border-radius: 1rem;
+  margin-top: 1rem;
+  padding: 2rem 2rem 2rem 3rem;
+}
+
+.input-title {
+  margin-bottom: 12px;
+}
+
 .wrapper {
   margin-bottom: 16px;
 }
@@ -112,7 +124,13 @@ label,
 }
 
 .page {
+  display: flex;
+  flex-direction: column;
   background-image: linear-gradient(#bff098, #6fd6ff);
+}
+
+.logo {
+  align-self: center;
 }
 
 .container {
