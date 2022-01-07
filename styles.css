@@ -106,6 +106,7 @@
 }
 
 label,
+.form-question,
 .input:focus ~ .form__label {
   position: relative;
   display: block;
@@ -137,4 +138,12 @@ label,
   background-color: white;
   border-radius: 10px;
   padding-top: 4em;
+}
+
+.form-question-wrapper {
+  border: none;
+  background: white;
+  border-radius: 1rem;
+  margin-top: 1rem;
+  padding: 2rem 2rem 2rem 3rem;
 }

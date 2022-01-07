@@ -13,6 +13,28 @@ if ($conn->connect_error) {
 }
 echo "Connected successfully";
 
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  $title = $_POST['title'];
+  $description = $_POST['description'];
+  $questions = $_POST['question'];
+  $answers = $_POST['answers'];
+  $types = $_POST['checkbox'];
+
+  mysqli_query($conn, "INSERT INTO forms(title, description) VALUES ('$title', '$description');");
+  $form_id = (int)mysqli_insert_id($conn);
+
+  if (isset($questions) && isset($title)) {
+    for ($i = 0; $i < count($questions); $i++) {
+      $question = $questions[$i];
+      $is_multiple_choice = $types[$i] == 'on' ?  0 : 1;
+      $question_answers = isset($answers[$i]) ? $answers[$i] : "";
+      // TODO: change later to real user id
+      $user_id = 1;
+      mysqli_query($conn, "INSERT INTO questions(question, answers, is_multiple_choice, form_id, created_by) VALUES ('$question', '$question_answers', $is_multiple_choice, $form_id, $user_id);");
+    }
+  }
+}
+
 ?>
 
 <script type="text/javascript">
@@ -136,30 +158,6 @@ echo "Connected successfully";
       <button type="submit" name="submit" value="submit" class="btn">Submit</button>
     </div>
   </form>
-  <span>
-    <?php
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      $questions = $_POST['question'];
-      $answers = $_POST['answers'];
-      $types = $_POST['checkbox'];
-
-      $title = $_POST['title'];
-      $description = $_POST['description'];
-
-      for ($i = 0; $i < count($questions); $i++) {
-        $question = $questions[$i];
-        $is_multiple_choice = $types[$i] == 'on' ?  true : false;
-        $question_answers = $answers[$i];
-        // TODO: change later to real user id
-        $user_id = 1;
-
-        mysqli_query($conn, "INSERT INTO forms(title, description, created_by) VALUES ($title, $description, $user_id);");
-        $form_id = mysqli_insert_id($conn);
-        mysqli_query($conn, "INSERT INTO questions(question, is_multiple_choice, answers, form_id, created_by) VALUES ($question, $is_multiple_choice, $question_answers, $form_id, $user_id);");
-      }
-    }
-    ?>
-  </span>
 </body>
 
 </html>

@@ -18,6 +18,12 @@ $data = mysqli_query($conn, "SELECT id,title FROM forms");
 
 ?>
 
+<script type="text/javascript">
+  function openForm(id) {
+    location.href = `form.php?form_id=${id}`;
+  }
+</script>
+
 <!DOCTYPE html>
 <html>
 
@@ -31,13 +37,15 @@ $data = mysqli_query($conn, "SELECT id,title FROM forms");
   <main>
     <img src="./logo.png" class="logo" />
     <button type="submit" name="submit" value="submit" class="btn">Create new form</button>
-    <ol class="gradient-list">
-      <?php while ($row = $data->fetch_assoc()) { ?>
-        <li>
-          <!-- TODO: redirect to form, using form id -->
-          <a href="index.php"> <?php echo $row['title']; ?></a>
-        </li>
-      <?php } ?>
+    <ol id="forms" class="gradient-list">
+      <?php
+      $i = 0;
+      while ($row = $data->fetch_assoc()) {
+        $title = $row['title'];
+        $id = $row['id'];
+        echo "<li onclick='openForm($id);' id=$i>$title</li>";
+        $i++;
+      } ?>
     </ol>
   </main>
 </body>
