@@ -35,7 +35,9 @@ $data = mysqli_query($conn, "SELECT id,title FROM forms");
 
 <body class="page">
   <main>
-    <img src="./logo.png" class="logo" />
+    <a href="home.php" class="logo">
+      <img src="./logo.png" />
+    </a>
     <a href="index.php" class="link">
       <button type="submit" class="btn">Create new form</button>
     </a>

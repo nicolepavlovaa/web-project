@@ -6,6 +6,7 @@
 
 .logo {
   align-self: center;
+  cursor: pointer;
 }
 
 .form {
@@ -88,6 +89,7 @@ label,
   font-weight: 650;
 
   overflow: hidden;
+  cursor: pointer;
 
   border-width: 0;
   outline: none;

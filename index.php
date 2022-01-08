@@ -138,7 +138,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 
 <body class="page">
-  <img src="./logo.png" class="logo" />
+  <a href="home.php" class="logo">
+    <img src="./logo.png" />
+  </a>
   <form id="form" class="form" method="POST">
     <div>
       <fieldset class="description-wrapper">

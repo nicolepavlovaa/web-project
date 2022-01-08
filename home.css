@@ -141,7 +141,8 @@ ol.gradient-list > li + li {
 
 .logo {
   align-self: center;
-  max-width: 200px;
+  max-width: 340px;
+  cursor: pointer;
 }
 
 .btn {
