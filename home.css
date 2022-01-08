@@ -1,15 +1,11 @@
 @import url(https://fonts.googleapis.com/css?family=Montserrat:900|Raleway:400,400i,700,700i);
-/*** FONTS ***/
-/*** VARIABLES ***/
-/* Colors */
-/*** EXTEND ***/
-/* box-shadow */
+
 ol.gradient-list > li,
 ol.gradient-list > li::before {
   box-shadow: 0.25rem 0.25rem 0.6rem rgba(0, 0, 0, 0.05),
     0 0.5rem 1.125rem rgba(75, 0, 0, 0.05);
 }
-/*** STYLE ***/
+
 *,
 *:before,
 *:after {
@@ -169,4 +165,8 @@ ol.gradient-list > li + li {
   color: #ffffff;
 
   transition: background-color 0.3s;
+}
+
+.link {
+  text-decoration: none;
 }

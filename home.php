@@ -36,7 +36,9 @@ $data = mysqli_query($conn, "SELECT id,title FROM forms");
 <body class="page">
   <main>
     <img src="./logo.png" class="logo" />
-    <button type="submit" name="submit" value="submit" class="btn">Create new form</button>
+    <a href="index.php" class="link">
+      <button type="submit" class="btn">Create new form</button>
+    </a>
     <ol id="forms" class="gradient-list">
       <?php
       $i = 0;

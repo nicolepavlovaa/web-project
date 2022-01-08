@@ -50,7 +50,7 @@ $data = mysqli_query($conn, "SELECT id,question,answers,form_id FROM questions W
           $is_multiple_choice = $row['is_multiple_choice'];
 
           echo "
-          <div class='form-question-wrapper'>
+          <div class='description-wrapper'>
             <p class='form-question'>$question</p>
             <div class='form-group'>
               <label class='form__label' htmlFor='answer-$i'>Answer:</label>
