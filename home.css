@@ -2,6 +2,7 @@
 
 ol.gradient-list > li,
 ol.gradient-list > li::before {
+  cursor: pointer;
   box-shadow: 0.25rem 0.25rem 0.6rem rgba(0, 0, 0, 0.05),
     0 0.5rem 1.125rem rgba(75, 0, 0, 0.05);
 }
@@ -156,6 +157,7 @@ ol.gradient-list > li + li {
   font-weight: 650;
 
   overflow: hidden;
+  cursor: pointer;
 
   border-width: 0;
   outline: none;

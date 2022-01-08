@@ -155,7 +155,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       </fieldset>
       <div id="container">&nbsp;</div>
     </div>
-    <div class="buttons">
+    <div class="buttons-and-text">
       <input type="button" value="Add question" id="add" class="btn">
       <button type="submit" name="submit" value="submit" class="btn">Submit</button>
     </div>

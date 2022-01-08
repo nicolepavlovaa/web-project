@@ -41,8 +41,9 @@
         </div>
       </div>
     </div>
-    <div class="buttons">
+    <div class="buttons-and-text">
       <button type="submit" name="submit" value="submit" class="btn">Register</button>
+      <p>Already have an account? <a href="login.php">Login</a></p>
     </div>
   </form>
   <span>

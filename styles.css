@@ -1,4 +1,5 @@
 .page {
+  min-height: calc(100vh - 16px);
   display: flex;
   flex-direction: column;
   background-image: linear-gradient(#bff098, #6fd6ff);
@@ -100,10 +101,6 @@ label,
   color: #ecf0f1;
 
   transition: background-color 0.3s;
-}
-
-.buttons {
-  display: flex;
 }
 
 .buttons-and-text {

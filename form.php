@@ -65,7 +65,7 @@ $data = mysqli_query($conn, "SELECT id,question,answers,form_id FROM questions W
         } ?>
       </div>
     </div>
-    <div class="buttons">
+    <div class="buttons-and-text">
       <button type="submit" name="submit" value="submit" class="btn">Submit</button>
     </div>
   </form>
