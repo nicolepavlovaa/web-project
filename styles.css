@@ -127,9 +127,13 @@ label,
   padding-top: 4em;
 }
 
+.icon-wrapper {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .icon {
   display: inline-block;
-  align-self: flex-end;
   margin-right: 20px;
   font: normal normal normal 40px/1 FontAwesome;
   font-size: 40px;
@@ -137,4 +141,40 @@ label,
   -webkit-font-smoothing: antialiased;
   color: white;
   cursor: pointer;
+}
+
+.overlay {
+  background-color: transparent;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: none;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  margin-top: 4em;
+  margin-right: 3em;
+  border-radius: 10px;
+  width: 200px;
+  height: 50px;
+  background-color: #fff;
+  box-sizing: border-box;
+  z-index: 9999;
+  cursor: pointer;
+}
+
+.modal-content {
+  display: flex;
+  justify-content: center;
+}
+
+.modal > p {
+  padding: 15px;
+  margin: 0;
 }

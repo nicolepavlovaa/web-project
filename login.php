@@ -31,10 +31,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $_SESSION['login_user'] = $myemail;
 
     $headers = array('alg' => 'HS256', 'typ' => 'JWT');
-    $payload = array('email' => $myemail, 'exp' => (time() + 360));
+    $expires = time() + 3600;
+    $payload = array('email' => $myemail, 'exp' => ($expires));
 
     $jwt = generate_jwt($headers, $payload);
-    setcookie('auth', $jwt);
+    setcookie('auth', $jwt, expires_or_options: $expires, path: '/');
 
     header("location: forms.php");
   } else {

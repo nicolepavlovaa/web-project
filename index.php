@@ -126,29 +126,27 @@ if ($is_jwt_valid) {
       }
     }, true);
 
-    // var modal = document.getElementById("user-modal");
-    // var btn = document.getElementById("open-user-menu");
-
-    // // Get the <span> element that closes the modal
-    // var span = document.getElementsByClassName("close")[0];
-
-    // // When the user clicks on the button, open the modal
-    // btn.onclick = function() {
-    //   modal.style.display = "block";
-    // }
-
-    // // When the user clicks on <span> (x), close the modal
-    // span.onclick = function() {
-    //   modal.style.display = "none";
-    // }
-
-    // // When the user clicks anywhere outside of the modal, close it
-    // window.onclick = function(event) {
-    //   if (event.target == modal) {
-    //     modal.style.display = "none";
-    //   }
-    // }
+    var popup = document.getElementById("modal");
+    var overlay = document.getElementById('background-overlay');
+    document.onclick = function(e) {
+      if (e.target.id == 'background-overlay') {
+        popup.style.display = 'none';
+        overlay.style.display = 'none';
+      }
+    };
   });
+
+  function openModal() {
+    let popup = document.getElementById("modal");
+    var overlay = document.getElementById('background-overlay');
+    popup.style.display = 'block';
+    overlay.style.display = 'block';
+  }
+
+  function logout() {
+    document.cookie = 'auth' + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    location.assign("login.php");
+  }
 </script>
 
 <!DOCTYPE html>
@@ -162,9 +160,9 @@ if ($is_jwt_valid) {
 </head>
 
 <body class="page">
-  <!-- <div onclick="openDialog()">
+  <div id="open-user-menu" class="icon-wrapper" onclick="openModal()">
     <i class="fa-user-circle icon"></i>
-  </div> -->
+  </div>
   <a href="home.php" class="logo">
     <img src="./logo.png" />
   </a>
@@ -187,6 +185,12 @@ if ($is_jwt_valid) {
       <button type="submit" name="submit" value="submit" class="btn">Submit</button>
     </div>
   </form>
+  <div id="background-overlay" class="overlay"></div>
+  <div id="modal" class="modal" onclick="logout()">
+    <div class="modal-content">
+      <p>Logout</p>
+    </div>
+  </div>
 </body>
 
 </html>
