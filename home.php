@@ -1,16 +1,13 @@
 <?php
+ include("authenticate.php");
 
-// E.g. find if the user is logged in
-if($_SESSION['login_user']) {
+ $token = $_COOKIE['auth'];
+ $is_jwt_valid = is_jwt_valid($token);
+ 
+ if ($is_jwt_valid) {
     // Logged 
-    //form.php
     echo 'logged penis';
 }
 else {
-    echo 'penis';
+  header("location: login.php");
 }
-
-// Destroy the session
-//if($log_out)
-//    session_destroy();
-?>

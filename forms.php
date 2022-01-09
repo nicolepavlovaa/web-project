@@ -1,9 +1,16 @@
 <?php
 include("config.php");
+include("authenticate.php");
 
+$token = $_COOKIE['auth'];
+$is_jwt_valid = is_jwt_valid($token);
 
-// load forms from db and display their titles
-$data = mysqli_query($db, "SELECT id,title FROM forms");
+if ($is_jwt_valid) {
+  // load forms from db and display their titles
+  $data = mysqli_query($db, "SELECT id,title FROM forms");
+} else {
+  header("location: login.php");
+}
 
 ?>
 

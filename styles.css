@@ -82,7 +82,7 @@ label,
 
 .btn {
   display: block;
-  margin: 30px auto;
+  margin: 16px auto;
   padding: 0;
   width: 200px;
   height: 40px;
@@ -125,4 +125,16 @@ label,
   background-color: white;
   border-radius: 10px;
   padding-top: 4em;
+}
+
+.icon {
+  display: inline-block;
+  align-self: flex-end;
+  margin-right: 20px;
+  font: normal normal normal 40px/1 FontAwesome;
+  font-size: 40px;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  color: white;
+  cursor: pointer;
 }

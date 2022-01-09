@@ -55,6 +55,9 @@
 <?php
 
 include("config.php");
+
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST");
 // Define variables and initialize with empty values
 $email = $password = $confirm_password = "";
 $email_err = $password_err = $confirm_password_err = "";
@@ -91,7 +94,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Close statement
     $stmt->close();
   } else {
-    echo '    stmt duha pak     ';
     echo $db->error;
   }
 
@@ -116,14 +118,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   }
 
   // Check input errors before inserting in database
-  echo 'before if';
   if (empty($email_err) && empty($password_err) && empty($confirm_password_err)) {
-    echo 'in if';
     // Prepare an insert statement
     $sql = "INSERT INTO users (email, password, fk, name) VALUES (?, ?, ?, ?)";
 
     if ($stmt = $db->prepare($sql)) {
-      echo "stmt duha";
       // Bind variables to the prepared statement as parameters
       $stmt->bind_param("ssds", $param_email, $param_password, $param_fk, $param_name);
 
@@ -132,7 +131,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       $param_password = password_hash($password, PASSWORD_DEFAULT); // Creates a password hash
       $param_fk = trim($_POST["fn"]);
       $param_name = trim($_POST["name"]);
-      echo $param_email, $param_fk, $param_name, $param_password;
 
       // Attempt to execute the prepared statement
       if ($stmt->execute()) {

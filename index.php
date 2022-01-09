@@ -1,29 +1,38 @@
 <?php
 include("config.php");
+include("authenticate.php");
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $title = $_POST['title'];
-  $description = $_POST['description'];
-  $questions = $_POST['question'];
-  // TODO: change to real email
-  $email = 'niki.0199@gmail.com';
-  $answers = $_POST['answers'];
-  $types = $_POST['checkbox'];
+$token = $_COOKIE['auth'];
+$is_jwt_valid = is_jwt_valid($token);
+
+if ($is_jwt_valid) {
+  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $email = get_user_email($token);
+
+    $title = $_POST['title'];
+    $description = $_POST['description'];
+
+    $questions = $_POST['question'];
+    $answers = $_POST['answers'];
+    $types = $_POST['checkbox'];
 
 
-  mysqli_query($db, "INSERT INTO forms(title, description, created_by) VALUES ('$title', '$description', '$email');");
-  $form_id = (int)mysqli_insert_id($db);
+    mysqli_query($db, "INSERT INTO forms(title, description, created_by) VALUES ('$title', '$description', '$email');");
+    $form_id = (int)mysqli_insert_id($db);
 
-  if (isset($questions) && isset($title)) {
-    for ($i = 0; $i < count($questions); $i++) {
-      $question = $questions[$i];
-      $is_multiple_choice = $types[$i] == 'on' ?  1 : 0;
-      $question_answers = isset($answers[$i]) ? $answers[$i] : "";
-      // TODO: change later to real user id
-      $user_id = 1;
-      mysqli_query($db, "INSERT INTO questions(stem, type, form_id) VALUES ('$question', $is_multiple_choice, $form_id);");
+    if (isset($questions) && isset($title)) {
+      for ($i = 0; $i < count($questions); $i++) {
+        $question = $questions[$i];
+        $is_multiple_choice = $types[$i] == 'on' ?  1 : 0;
+        $question_answers = isset($answers[$i]) ? $answers[$i] : "";
+        // TODO: change later to real user id
+        $user_id = 1;
+        mysqli_query($db, "INSERT INTO questions(stem, type, form_id) VALUES ('$question', $is_multiple_choice, $form_id);");
+      }
     }
   }
+} else {
+  header("location: login.php");
 }
 
 ?>
@@ -116,6 +125,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         });
       }
     }, true);
+
+    // var modal = document.getElementById("user-modal");
+    // var btn = document.getElementById("open-user-menu");
+
+    // // Get the <span> element that closes the modal
+    // var span = document.getElementsByClassName("close")[0];
+
+    // // When the user clicks on the button, open the modal
+    // btn.onclick = function() {
+    //   modal.style.display = "block";
+    // }
+
+    // // When the user clicks on <span> (x), close the modal
+    // span.onclick = function() {
+    //   modal.style.display = "none";
+    // }
+
+    // // When the user clicks anywhere outside of the modal, close it
+    // window.onclick = function(event) {
+    //   if (event.target == modal) {
+    //     modal.style.display = "none";
+    //   }
+    // }
   });
 </script>
 
@@ -126,9 +158,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <meta charset="UTF-8" />
   <title>Project</title>
   <link href="./styles.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body class="page">
+  <!-- <div onclick="openDialog()">
+    <i class="fa-user-circle icon"></i>
+  </div> -->
   <a href="home.php" class="logo">
     <img src="./logo.png" />
   </a>

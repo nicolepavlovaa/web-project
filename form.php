@@ -1,10 +1,25 @@
 <?php
 include("config.php");
+include("authenticate.php");
 
-$form_id = $_GET['form_id'];
-$form_data = mysqli_query($db, "SELECT id, title, description FROM forms WHERE id=$form_id;");
-$form = $form_data->fetch_assoc();
-$data = mysqli_query($db, "SELECT id, stem, form_id FROM questions WHERE form_id=$form_id;");
+$token = $_COOKIE['auth'];
+$is_jwt_valid = is_jwt_valid($token);
+
+if ($is_jwt_valid) {
+  $form_id = $_GET['form_id'];
+  $form_data = mysqli_query($db, "SELECT id, title, description FROM forms WHERE id=$form_id;");
+  $form = $form_data->fetch_assoc();
+  $data = mysqli_query($db, "SELECT id, stem, form_id FROM questions WHERE form_id=$form_id;");
+
+  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    foreach ($assoc as $question_id => $answer) {
+      $user_email = get_user_email($token);
+      mysqli_query($db, "INSERT INTO form_results(question_id, answered_by, answer) VALUES ($question_id, '$user_email', '$answer');");
+    }
+  }
+} else {
+  header("location: login.php");
+}
 ?>
 
 <!DOCTYPE html>
@@ -58,17 +73,6 @@ $data = mysqli_query($db, "SELECT id, stem, form_id FROM questions WHERE form_id
       <button type="submit" name="submit" value="submit" class="btn">Submit</button>
     </div>
   </form>
-  <span>
-    <?php
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      foreach ($assoc as $question_id => $answer) {
-        // TODO: change later to real user id
-        $user_id = 1;
-        mysqli_query($db, "INSERT INTO form_results(question_id, answered_by, answer) VALUES ($question_id, $user_id, '$answer');");
-      }
-    }
-    ?>
-  </span>
 </body>
 
 </html>
