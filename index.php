@@ -1,36 +1,27 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "AbC13579";
-$database = "web_project";
-// Create connection
-$conn = new mysqli($servername, $username, $password, $database);
-
-// Check connection
-if ($conn->connect_error) {
-  echo "$conn->connect_error";
-  die("Connection failed: " . $conn->connect_error);
-}
-echo "Connected successfully";
+include("config.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $title = $_POST['title'];
   $description = $_POST['description'];
   $questions = $_POST['question'];
+  // TODO: change to real email
+  $email = 'niki.0199@gmail.com';
   $answers = $_POST['answers'];
   $types = $_POST['checkbox'];
 
-  mysqli_query($conn, "INSERT INTO forms(title, description) VALUES ('$title', '$description');");
-  $form_id = (int)mysqli_insert_id($conn);
+
+  mysqli_query($db, "INSERT INTO forms(title, description, created_by) VALUES ('$title', '$description', '$email');");
+  $form_id = (int)mysqli_insert_id($db);
 
   if (isset($questions) && isset($title)) {
     for ($i = 0; $i < count($questions); $i++) {
       $question = $questions[$i];
-      $is_multiple_choice = $types[$i] == 'on' ?  0 : 1;
+      $is_multiple_choice = $types[$i] == 'on' ?  1 : 0;
       $question_answers = isset($answers[$i]) ? $answers[$i] : "";
       // TODO: change later to real user id
       $user_id = 1;
-      mysqli_query($conn, "INSERT INTO questions(question, answers, is_multiple_choice, form_id, created_by) VALUES ('$question', '$question_answers', $is_multiple_choice, $form_id, $user_id);");
+      mysqli_query($db, "INSERT INTO questions(stem, type, form_id) VALUES ('$question', $is_multiple_choice, $form_id);");
     }
   }
 }

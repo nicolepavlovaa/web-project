@@ -1,21 +1,10 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "AbC13579";
-$database = "web_project";
-// Create connection
-$conn = new mysqli($servername, $username, $password, $database);
+include("config.php");
 
-// Check connection
-if ($conn->connect_error) {
-  echo "$conn->connect_error";
-  die("Connection failed: " . $conn->connect_error);
-}
-echo "Connected successfully";
 $form_id = $_GET['form_id'];
-$form_data = mysqli_query($conn, "SELECT id, title, description FROM forms WHERE id=$form_id;");
+$form_data = mysqli_query($db, "SELECT id, title, description FROM forms WHERE id=$form_id;");
 $form = $form_data->fetch_assoc();
-$data = mysqli_query($conn, "SELECT id,question,answers,form_id FROM questions WHERE form_id=$form_id;");
+$data = mysqli_query($db, "SELECT id, stem, form_id FROM questions WHERE form_id=$form_id;");
 ?>
 
 <!DOCTYPE html>
@@ -33,20 +22,20 @@ $data = mysqli_query($conn, "SELECT id,question,answers,form_id FROM questions W
   </a>
   <form id="form" class="form" method="POST">
     <div>
-      <fieldset class="description-wrapper">
+      <div class="description-wrapper">
         <div class="input-title">
           <p class="form-question"><?php echo $form['title'] ?></p>
         </div>
         <div>
           <p class="form-question"><?php echo $form['description'] ?></p>
         </div>
-      </fieldset>
+      </div>
       <div id="container">
         <?php
         $i = 0;
         $assoc = array();
         while ($row = $data->fetch_assoc()) {
-          $question = $row['question'];
+          $question = $row['stem'];
           // TODO: add multiple choice
           $answers = $row['answers'];
           $is_multiple_choice = $row['is_multiple_choice'];
@@ -75,7 +64,7 @@ $data = mysqli_query($conn, "SELECT id,question,answers,form_id FROM questions W
       foreach ($assoc as $question_id => $answer) {
         // TODO: change later to real user id
         $user_id = 1;
-        mysqli_query($conn, "INSERT INTO form_results(question_id, answered_by, answer) VALUES ($question_id, $user_id, '$answer');");
+        mysqli_query($db, "INSERT INTO form_results(question_id, answered_by, answer) VALUES ($question_id, $user_id, '$answer');");
       }
     }
     ?>
