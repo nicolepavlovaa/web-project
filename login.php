@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $_SESSION['login_user'] = $myemail;
 
     $headers = array('alg' => 'HS256', 'typ' => 'JWT');
-    $payload = array('email' => $myemail, 'exp' => (time() + 360));
+    $payload = array('email' => $myemail, 'exp' => (time() + 3600));
 
     $jwt = generate_jwt($headers, $payload);
     setcookie('auth', $jwt);

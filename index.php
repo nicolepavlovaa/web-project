@@ -24,10 +24,15 @@ if ($is_jwt_valid) {
       for ($i = 0; $i < count($questions); $i++) {
         $question = $questions[$i];
         $is_multiple_choice = $types[$i] == 'on' ?  1 : 0;
-        $question_answers = isset($answers[$i]) ? $answers[$i] : "";
+        $question_answers = explode("\n", $answers[0]);
+        
         // TODO: change later to real user id
         $user_id = 1;
         mysqli_query($db, "INSERT INTO questions(stem, type, form_id) VALUES ('$question', $is_multiple_choice, $form_id);");
+        $question_id = (int)mysqli_insert_id($db);
+        foreach($question_answers as $answer) {
+          mysqli_query($db, "INSERT INTO answers(question_id, answer) VALUES ($question_id, '$answer');");
+        }
       }
     }
   }
