@@ -1,38 +1,21 @@
 <?php
 include("config.php");
-include("authenticate.php");
+include("include/authenticate.php");
+include("include/parsers.php");
+include("include/generate_components.php");
+include("include/queries.php");
 
 $token = $_COOKIE['auth'];
 $is_jwt_valid = is_jwt_valid($token);
 
 if ($is_jwt_valid) {
   $form_id = $_GET['form_id'];
-  $form_data = mysqli_query($db, "SELECT id, title, description FROM forms WHERE id=$form_id;");
-  $form = $form_data->fetch_assoc();
-  $data = mysqli_query($db, "SELECT id, stem, form_id FROM questions WHERE form_id=$form_id;");
-  $questions_multiplechoice = mysqli_query($db, "SELECT id FROM questions WHERE form_id=$form_id and type = 1;");
-  //for loop questions_multiplechoice 
-  foreach($questions_multiplechoice->fetch_all() as $q) {
-    $exact_question_id = $q[0];
-    $answers_multiplechoice = mysqli_query($db, "SELECT id, answer, question_id FROM answers WHERE question_id=$exact_question_id;");
-    var_dump($answers_multiplechoice->fetch_all());
-    foreach($answers_multiplechoice->fetch_all() as $option) {
-      $a = $option[1];
-      // option[0] id of answer
-      // option[1] value of answer
-      // option[2] id of question
-    }
-  }
-  
+  $res = get_form_info($db, $form_id);
 
-  if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    foreach ($assoc as $question_id => $answer) {
-      $user_email = get_user_email($token);
-      mysqli_query($db, "INSERT INTO form_results(question_id, answered_by, answer) VALUES ($question_id, '$user_email', '$answer');");
-    }
-  }
+  $form_data = $res[0];
+  $questions = $res[1];
 } else {
-  header("location: login.php");
+  header("location: login");
 }
 ?>
 
@@ -42,45 +25,48 @@ if ($is_jwt_valid) {
 <head>
   <meta charset="UTF-8" />
   <title>Form</title>
-  <link href="./styles.css" rel="stylesheet" />
+  <link href="css/styles.css" rel="stylesheet" />
 </head>
 
 <body class="page">
-  <a href="home.php" class="logo">
-    <img src="./logo.png" />
+  <a href="forms" class="logo">
+    <img src="assets/logo.png" />
   </a>
   <form id="form" class="form" method="POST">
     <div>
       <div class="description-wrapper">
         <div class="input-title">
-          <p class="form-question"><?php echo $form['title'] ?></p>
+          <p class="form-question"><?php echo $form_data['title'] ?></p>
         </div>
         <div>
-          <p class="form-question"><?php echo $form['description'] ?></p>
+          <p class="form-question"><?php echo $form_data['description'] ?></p>
         </div>
       </div>
       <div id="container">
         <?php
-        $i = 0;
-        $assoc = array();
-        while ($row = $data->fetch_assoc()) {
+        $answers_map = array();
+        while ($row = $questions->fetch_assoc()) {
+          $question_id = $row['id'];
           $question = $row['stem'];
-          // TODO: add multiple choice
           $answers = $row['answers'];
-          $is_multiple_choice = $row['is_multiple_choice'];
+          $is_multiple_choice = $row['type'];
+
+          $answer_component = $is_multiple_choice ? get_closed_question_answers($db, $question_id) : get_open_answer_component($question_id);
 
           echo "
           <div class='description-wrapper'>
             <p class='form-question'>$question</p>
-            <div class='form-group'>
-              <label class='form__label' htmlFor='answer-$i'>Answer:</label>
-              <input type='text' class='input' name='user_answers[]' id='answer-$i' />
-            </div>
+            $answer_component
           </div>";
-          $id = $row['id'];
-          $assoc[$id] = $_POST['user_answers'][$i];
-          $i++;
-        } ?>
+
+          $answers_map[$question_id] = parse_input($_POST["user_answers-$question_id"]);
+        }
+
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+          $user_email = get_user_email($token);
+          insert_answers($db, $answers_map, $user_email);
+        }
+        ?>
       </div>
     </div>
     <div class="buttons-and-text">

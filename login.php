@@ -1,32 +1,21 @@
 <?php
 include("config.php");
-include("authenticate.php");
+include("include/authenticate.php");
+include("include/queries.php");
+include("include/parsers.php");
 
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST");
 
-// session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  // username and password sent from form 
+  $myemail = parse_input($_POST["email"]);
+  $mypassword = parse_input($_POST["password"]);
 
-  //$myemail = mysqli_real_escape_string($db,$_POST['email']);
-  //$mypassword = mysqli_real_escape_string($db,$_POST['password']);
-  $myemail = trim($_POST["email"]);
-  $mypassword = trim($_POST["password"]);
-
-  //$sql = "SELECT password FROM users WHERE email = ?";
-  $sql = "SELECT password FROM users WHERE email = '" . $myemail . "'";
-  $stmt = $db->query($sql);
-
-  //$stmt->execute([$myemail]);
-  //$result = $stmt->store_result();
-  $result = $stmt->fetch_all(MYSQLI_ASSOC);
+  $result = login_user($db, $myemail, $mypassword);
   $password = $result[0]["password"];
 
-
   // If result matched $myusername and $mypassword, table row must be 1 row
-
   if (password_verify($mypassword, $password)) {
     $_SESSION['login_user'] = $myemail;
 
@@ -50,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
   <meta charset="UTF-8" />
   <title>Login</title>
-  <link href="./styles.css" rel="stylesheet" />
+  <link href="css/styles.css" rel="stylesheet" />
 </head>
 
 <body class="page">
