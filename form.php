@@ -10,6 +10,20 @@ if ($is_jwt_valid) {
   $form_data = mysqli_query($db, "SELECT id, title, description FROM forms WHERE id=$form_id;");
   $form = $form_data->fetch_assoc();
   $data = mysqli_query($db, "SELECT id, stem, form_id FROM questions WHERE form_id=$form_id;");
+  $questions_multiplechoice = mysqli_query($db, "SELECT id FROM questions WHERE form_id=$form_id and type = 1;");
+  //for loop questions_multiplechoice 
+  foreach($questions_multiplechoice->fetch_all() as $q) {
+    $exact_question_id = $q[0];
+    $answers_multiplechoice = mysqli_query($db, "SELECT id, answer, question_id FROM answers WHERE question_id=$exact_question_id;");
+    var_dump($answers_multiplechoice->fetch_all());
+    foreach($answers_multiplechoice->fetch_all() as $option) {
+      $a = $option[1];
+      // option[0] id of answer
+      // option[1] value of answer
+      // option[2] id of question
+    }
+  }
+  
 
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
     foreach ($assoc as $question_id => $answer) {

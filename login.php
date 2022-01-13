@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $payload = array('email' => $myemail, 'exp' => ($expires));
 
     $jwt = generate_jwt($headers, $payload);
-    setcookie('auth', $jwt, expires_or_options: $expires, path: '/');
+    setcookie('auth', $jwt, $expires, '/');
 
     header("location: forms.php");
   } else {
