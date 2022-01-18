@@ -14,18 +14,14 @@
             <input type="file" id="file-input" />
             <label for="file-input" class="btn-2">upload json</label>
             <p class="form-question filename" id="filename"></p>
+            <input type="file" id="file-input-2" />
+            <label for="file-input-2" class="btn-2">upload form</label>
+            <p class="form-question filename" id="filename-2"></p>
         </div>
         <div class="textarea-container">
             <textarea class="textarea" id="gform" name="gform" rows="30" cols="120">
             </textarea>
             <textarea class="textarea" id="form-content" name="form-content" rows="30" cols="300">
-stem=what do you like?,tag=input,type=text,name=input_name,label=input_label;tag=img,label=img_label,src=assets/logo.png
-stem=my question is this,tag=textarea,name=input_area,label=my text area
-stem=choose from the following,tag=input,type=radio,name=options,label=option one,value=one;tag=input,type=radio,name=options,label=option 2,value=two
-stem=choose date,tag=input,type=date,name=date,label=this is a date
-stem=choose month,tag=input,type=month,name=month,label=this is month
-stem=choose datetime,tag=input,type=datetime-local,name=local,label=this is datetime
-stem=choose file,tag=input,type=file,name=file
             </textarea>
         </div>
         <button type="submit" name="submit" value="submit" class="btn">Generate</button>
@@ -57,6 +53,34 @@ stem=choose file,tag=input,type=file,name=file
                     // Render thumbnail.
                     JsonObj = JSON.parse(e.target.result);
                     document.getElementById('gform').value = JSON.stringify(JsonObj, null, 2);
+                };
+            })(f);
+
+            // Read in the image file as a data URL.
+            reader.readAsText(f);
+        }
+
+        fileInput = document.getElementById("file-input-2");
+        fileInput.onchange = function(event) {
+            let fileList = fileInput.files;
+            console.log(fileList);
+            f = fileList.item(0);
+            name = f.name;
+
+            // display the filename
+            fileName = document.getElementById("filename-2");
+            fileName.innerHTML = name;
+            fileName.style.backgroundColor = "white";
+
+            let reader = new FileReader();
+            let obj;
+
+            // Closure to capture the file information.
+            reader.onload = (function(theFile) {
+                return function(e) {
+                    // Render thumbnail.
+                    obj = e.target.result;
+                    document.getElementById('form-content').value = obj;
                 };
             })(f);
 

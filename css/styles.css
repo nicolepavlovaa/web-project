@@ -19,7 +19,7 @@
   margin-bottom: 2rem;
   margin-left: auto;
   margin-right: auto;
-  width: 80%;
+  width: 90%;
   padding: 1%;
 }
 
@@ -63,7 +63,7 @@
   border: none;
   margin: 16px;
   padding: 20px;
-
+  max-width: 40vw;
   font-size: 14px;
 }
 
