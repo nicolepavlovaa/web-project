@@ -140,7 +140,15 @@ function chooseClass($tag, $type)
     if ($tag == "textarea" || ($tag == "input" && ($type == "text" || $type == "password" || $type == "number" || $type == "email" || $type == "date" || $type == "month" || $type == "datetime-local"))) {
         return "input";
     }
+    if ($tag == "label" && $type == "file") {
+        return "file-generated";
+    }
     return "";
+}
+
+function getTypeValue($type)
+{
+    return trim(explode('=', $type)[1], "'");
 }
 
 function split_inputs($rows)
@@ -197,17 +205,18 @@ function parser($rows)
                 }
             }
         }
-        // fix ids
-        $class = chooseClass($tag, trim(explode('=', $type)[1], "'"));
+        $class = chooseClass($tag, getTypeValue($type));
         $class_attr = $class == "" ?: "class='$class'";
         $el = "<$tag $type id='el-$counter' $class_attr $name $src $value></$tag>";
         if ($tag != '') {
             $result = $result . "<p class='form-question-title'>$stem</p>";
-            if ($label != "" && !($tag == "input" && trim(explode('=', $type)[1], "'") == "radio")) {
-                $label_el = "<label class='form__label' for='el-$counter'>$label</label>";
+            if ($label != "" && !($tag == "input" && getTypeValue($type) == "radio")) {
+                $class = chooseClass("label", getTypeValue($type));
+                $class_name = $class == "" ? "class='form__label'" : "class='$class'";
+                $label_el = "<label $class_name for='el-$counter'>$label</label>";
                 $result = $result . $label_el;
             }
-            if ($tag == "input" && trim(explode('=', $type)[1], "'") == "radio") {
+            if ($tag == "input" && getTypeValue($type) == "radio") {
                 $result = $result . "<div class='radio'>";
                 $result = $result . $el;
                 $counter++;

@@ -307,3 +307,18 @@ a {
   display: flex;
   align-items: baseline;
 }
+
+.file-generated {
+  cursor: pointer;
+  background-color: #4592d6;
+  height: 30px;
+  font-weight: 600;
+  color: white;
+  padding: 10px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  border-radius: 50px;
+  width: fit-content;
+  min-width: 100px;
+}
