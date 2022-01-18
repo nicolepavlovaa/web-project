@@ -33,9 +33,13 @@
 <script type="text/javascript">
     window.addEventListener("load", function() {
         fileInput = document.getElementById("file-input");
+        fileInput2 = document.getElementById("file-input-2");
+        let reader = new FileReader();
+
         fileInput.onchange = function(event) {
             let fileList = fileInput.files;
-            console.log(fileList);
+            let JsonObj;
+
             f = fileList.item(0);
             name = f.name;
 
@@ -43,9 +47,6 @@
             fileName = document.getElementById("filename");
             fileName.innerHTML = name;
             fileName.style.backgroundColor = "white";
-
-            let reader = new FileReader();
-            let JsonObj;
 
             // Closure to capture the file information.
             reader.onload = (function(theFile) {
@@ -60,10 +61,10 @@
             reader.readAsText(f);
         }
 
-        fileInput = document.getElementById("file-input-2");
-        fileInput.onchange = function(event) {
-            let fileList = fileInput.files;
-            console.log(fileList);
+        fileInput2.onchange = function(event) {
+            let fileList = fileInput2.files;
+            let obj;
+
             f = fileList.item(0);
             name = f.name;
 
@@ -71,9 +72,6 @@
             fileName = document.getElementById("filename-2");
             fileName.innerHTML = name;
             fileName.style.backgroundColor = "white";
-
-            let reader = new FileReader();
-            let obj;
 
             // Closure to capture the file information.
             reader.onload = (function(theFile) {
@@ -250,12 +248,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $json_settings = __DIR__ . "/form_settings/result_$timestamp.json";
     if (!file_exists($filename)) {
         $file = fopen($filename, "w") or die("Unable to open file.");
-        echo fwrite($file, trim($_POST["form-content"]));
+        fwrite($file, trim($_POST["form-content"]));
         fclose($file);
     }
     if (!file_exists($json_settings)) {
         $file = fopen($json_settings, "w") or die("Unable to open file.");
-        echo fwrite($file, trim($_POST["gform"]));
+        fwrite($file, trim($_POST["gform"]));
         fclose($file);
     }
 }
