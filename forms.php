@@ -42,7 +42,7 @@ if ($is_jwt_valid) {
     <a href="forms" class="logo">
       <img src="assets/logo.png" />
     </a>
-    <a href="create_form" class="link">
+    <a href="generate_form" class="link">
       <button type="submit" class="btn">Create new form</button>
     </a>
     <ol id="forms" class="gradient-list">

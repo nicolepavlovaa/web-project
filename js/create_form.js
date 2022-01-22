@@ -95,10 +95,3 @@ window.addEventListener("load", function () {
     }
   };
 });
-
-function openModal() {
-  let popup = document.getElementById("modal");
-  var overlay = document.getElementById('background-overlay');
-  popup.style.display = 'block';
-  overlay.style.display = 'block';
-}

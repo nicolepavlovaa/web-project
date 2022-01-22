@@ -31,11 +31,15 @@ if ($is_jwt_valid) {
 
   $info = file_get_contents("generated/$form_json");
   $json_content = json_decode($info, true);
+  $display_edit_button = false;
+
   foreach ($json_content as $json_key => $value) {
     if ($json_key == "form_title") {
       $title = $value;
     } elseif ($json_key == "form_description") {
       $description = $value;
+    } elseif ($json_key == "creator" && $value == get_user_email($token)) {
+      $display_edit_button = true;
     }
   }
 } else {
@@ -50,6 +54,7 @@ if ($is_jwt_valid) {
   <meta charset="UTF-8" />
   <title>Form</title>
   <link href="css/styles.css" rel="stylesheet" />
+  <script type="text/javascript" srx="js/form.js"></script>
 </head>
 
 <body class="page">
@@ -59,6 +64,7 @@ if ($is_jwt_valid) {
   <?php
   echo
   "<form id='form' class='form' method='POST'>
+    <button id='delete-form' onclick='deleteForm()' class='btn'>Delete form</button>
     <div class='description-wrapper'>
         <div class='input-title'>
             <p class='form-question'>$title</p>

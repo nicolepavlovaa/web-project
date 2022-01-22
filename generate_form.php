@@ -5,9 +5,14 @@
     <meta charset="UTF-8" />
     <title>Generate form</title>
     <link href="css/styles.css" rel="stylesheet" />
+    <script type="text/javascript" src="js/generate_form.js"></script>
+    <script type="text/javascript" src="js/helpers.js"></script>
 </head>
 
 <body class="page">
+    <a href="forms" class="logo">
+        <img src="assets/logo.png" />
+    </a>
     <form id="form" class="form" method="POST">
         <label class="form-question-title" for="gform">Type the code to generate html form and choose a settings file:</label><br>
         <div class="file-wrapper">
@@ -30,73 +35,17 @@
 
 </html>
 
-<script type="text/javascript">
-    window.addEventListener("load", function() {
-        fileInput = document.getElementById("file-input");
-        fileInput2 = document.getElementById("file-input-2");
-        let reader = new FileReader();
-
-        fileInput.onchange = function(event) {
-            let fileList = fileInput.files;
-            let JsonObj;
-
-            f = fileList.item(0);
-            name = f.name;
-
-            // display the filename
-            fileName = document.getElementById("filename");
-            fileName.innerHTML = name;
-            fileName.style.backgroundColor = "white";
-
-            // Closure to capture the file information.
-            reader.onload = (function(theFile) {
-                return function(e) {
-                    // Render thumbnail.
-                    JsonObj = JSON.parse(e.target.result);
-                    document.getElementById('gform').value = JSON.stringify(JsonObj, null, 2);
-                };
-            })(f);
-
-            // Read in the image file as a data URL.
-            reader.readAsText(f);
-        }
-
-        fileInput2.onchange = function(event) {
-            let fileList = fileInput2.files;
-            let obj;
-
-            f = fileList.item(0);
-            name = f.name;
-
-            // display the filename
-            fileName = document.getElementById("filename-2");
-            fileName.innerHTML = name;
-            fileName.style.backgroundColor = "white";
-
-            // Closure to capture the file information.
-            reader.onload = (function(theFile) {
-                return function(e) {
-                    // Render thumbnail.
-                    obj = e.target.result;
-                    document.getElementById('form-content').value = obj;
-                };
-            })(f);
-
-            // Read in the image file as a data URL.
-            reader.readAsText(f);
-        }
-    })
-</script>
 
 <?php
 include("include/form_generator_helpers.php");
 include("include/authenticate.php");
+include("include/queries.php");
 
 $token = $_COOKIE['auth'];
 $is_jwt_valid = is_jwt_valid($token);
 
 if ($is_jwt_valid) {
-
+    $email = get_user_email($token);
     $json = json_decode($_POST["gform"], true);
     $title = $json["form_title"];
     $description = $json["form_description"];
@@ -107,23 +56,6 @@ if ($is_jwt_valid) {
 
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        echo
-        "<form id='form' class='form' method='POST'>
-    <div class='description-wrapper'>
-        <div class='input-title'>
-            <p class='form-question'>$title</p>
-        </div>
-        <div>
-            <p class='form-question'>$description</p>
-        </div>
-    </div>
-    <div id='containter'>";
-        $res = split_inputs($rows);
-        echo $res;
-        echo '</div>
-    </div>
-</form>';
-
         $date = new DateTime();
         $timestamp = $date->getTimestamp();
         $filename = __DIR__ . "/generated/result_$timestamp.txt";
@@ -135,7 +67,9 @@ if ($is_jwt_valid) {
         }
         if (!file_exists($json_settings)) {
             $file = fopen($json_settings, "w") or die("Unable to open file.");
-            fwrite($file, trim($_POST["gform"]));
+            $json_post = json_decode($_POST["gform"], true);
+            $json_post["creator"] = $email;
+            fwrite($file, trim(json_encode($json_post)));
             fclose($file);
         }
     }
