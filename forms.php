@@ -6,8 +6,21 @@ $token = $_COOKIE['auth'];
 $is_jwt_valid = is_jwt_valid($token);
 
 if ($is_jwt_valid) {
-  // load forms from db and display their titles
-  $data = mysqli_query($db, "SELECT id,title FROM forms");
+  $files = scandir('generated/');
+  $pairs = array();
+
+  foreach ($files as $file) {
+    if ($file != "." && $file != "..") {
+      $key = trim(explode("_", $file)[1], ".json");
+      $key = trim($key, ".txt");
+
+      if (array_key_exists($key, $pairs)) {
+        array_push($pairs[$key], $file);
+      } else {
+        $pairs[$key] = [$file];
+      }
+    }
+  }
 } else {
   header("location: login");
 }
@@ -34,13 +47,23 @@ if ($is_jwt_valid) {
     </a>
     <ol id="forms" class="gradient-list">
       <?php
-      $i = 0;
-      while ($row = $data->fetch_assoc()) {
-        $title = $row['title'];
-        $id = $row['id'];
-        echo "<li onclick='openForm($id);' id=$i>$title</li>";
-        $i++;
-      } ?>
+      foreach ($pairs as $key => $value) {
+        $json_file = '';
+        foreach ($value as $filename) {
+          if (explode(".", $filename)[1] == "json") {
+            $json_file = $filename;
+          }
+        }
+
+        $file = file_get_contents("generated/$json_file");
+        $json_content = json_decode($file, true);
+        foreach ($json_content as $json_key => $value) {
+          if ($json_key == "form_title") {
+            echo "<li onclick='openForm($key);' id=$key>$value</li>";
+          }
+        }
+      }
+      ?>
     </ol>
   </main>
 </body>

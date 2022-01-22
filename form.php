@@ -4,16 +4,40 @@ include("include/authenticate.php");
 include("include/parsers.php");
 include("include/generate_components.php");
 include("include/queries.php");
+include("include/form_generator_helpers.php");
 
 $token = $_COOKIE['auth'];
 $is_jwt_valid = is_jwt_valid($token);
 
 if ($is_jwt_valid) {
   $form_id = $_GET['form_id'];
-  $res = get_form_info($db, $form_id);
+  $form_json = '';
+  $form_txt = '';
+  $files = scandir('generated/');
 
-  $form_data = $res[0];
-  $questions = $res[1];
+  foreach ($files as $file) {
+    if ($file == "result_$form_id.txt") {
+      $form_txt = $file;
+    } elseif ($file == "result_$form_id.json") {
+      $form_json = $file;
+    }
+  }
+
+  $title = "";
+  $description = "";
+
+  $content = file_get_contents("generated/$form_txt");
+  $rows = explode("\n", $content);
+
+  $info = file_get_contents("generated/$form_json");
+  $json_content = json_decode($info, true);
+  foreach ($json_content as $json_key => $value) {
+    if ($json_key == "form_title") {
+      $title = $value;
+    } elseif ($json_key == "form_description") {
+      $description = $value;
+    }
+  }
 } else {
   header("location: login");
 }
@@ -32,47 +56,27 @@ if ($is_jwt_valid) {
   <a href="forms" class="logo">
     <img src="assets/logo.png" />
   </a>
-  <form id="form" class="form" method="POST">
-    <div>
-      <div class="description-wrapper">
-        <div class="input-title">
-          <p class="form-question"><?php echo $form_data['title'] ?></p>
+  <?php
+  echo
+  "<form id='form' class='form' method='POST'>
+    <div class='description-wrapper'>
+        <div class='input-title'>
+            <p class='form-question'>$title</p>
         </div>
         <div>
-          <p class="form-question"><?php echo $form_data['description'] ?></p>
+            <p class='form-question'>$description</p>
         </div>
-      </div>
-      <div id="container">
-        <?php
-        $answers_map = array();
-        while ($row = $questions->fetch_assoc()) {
-          $question_id = $row['id'];
-          $question = $row['stem'];
-          $answers = $row['answers'];
-          $is_multiple_choice = $row['type'];
-
-          $answer_component = $is_multiple_choice ? get_closed_question_answers($db, $question_id) : get_open_answer_component($question_id);
-
-          echo "
-          <div class='description-wrapper'>
-            <p class='form-question'>$question</p>
-            $answer_component
-          </div>";
-
-          $answers_map[$question_id] = parse_input($_POST["user_answers-$question_id"]);
-        }
-
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-          $user_email = get_user_email($token);
-          insert_answers($db, $answers_map, $user_email);
-        }
-        ?>
-      </div>
     </div>
-    <div class="buttons-and-text">
+    <div id='containter'>";
+  $res = split_inputs($rows);
+  echo $res;
+  echo '</div>
+  <div class="buttons-and-text">
       <button type="submit" name="submit" value="submit" class="btn">Submit</button>
     </div>
-  </form>
+    </div>
+</form>';
+  ?>
 </body>
 
 </html>
