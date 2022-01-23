@@ -1,6 +1,5 @@
 function openForm(id) {
   location.href = `form?form_id=${id}`;
-
 }
 
 function logout() {

@@ -52,4 +52,13 @@ window.addEventListener("load", function () {
     // Read in the image file as a data URL.
     reader.readAsText(f);
   }
-})
+
+  var popup = document.getElementById("modal");
+  var overlay = document.getElementById('background-overlay');
+  document.onclick = function (e) {
+    if (e.target.id == 'background-overlay') {
+      popup.style.display = 'none';
+      overlay.style.display = 'none';
+    }
+  };
+});

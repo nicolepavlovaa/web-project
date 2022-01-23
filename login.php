@@ -1,8 +1,8 @@
 <?php
-include("config.php");
-include("include/authenticate.php");
-include("include/queries.php");
-include("include/parsers.php");
+include(__DIR__ . "/config.php");
+include(__DIR__ . "/private/authenticate.php");
+include(__DIR__ . "/private/queries.php");
+include(__DIR__ . "/private/parsers.php");
 
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST");
@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $jwt = generate_jwt($headers, $payload);
     setcookie('auth', $jwt, $expires, '/');
 
-    header("location: forms.php");
+    header("location: index");
   } else {
     $error = "Your Login Name or Password is invalid";
   }

@@ -5,12 +5,16 @@
     <meta charset="UTF-8" />
     <title>Generate form</title>
     <link href="css/styles.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script type="text/javascript" src="js/generate_form.js"></script>
     <script type="text/javascript" src="js/helpers.js"></script>
 </head>
 
 <body class="page">
-    <a href="forms" class="logo">
+    <div id="open-user-menu" class="icon-wrapper" onclick="openModal()">
+        <i class="fa-user-circle icon"></i>
+    </div>
+    <a href="index" class="logo">
         <img src="assets/logo.png" />
     </a>
     <form id="form" class="form" method="POST">
@@ -31,47 +35,30 @@
         </div>
         <button type="submit" name="submit" value="submit" class="btn">Generate</button>
     </form>
+    <div id="background-overlay" class="overlay"></div>
+    <div id="modal" class="modal" onclick="logout()">
+        <div class="modal-content">
+            <p>Logout</p>
+        </div>
+    </div>
 </body>
 
 </html>
 
 
 <?php
-include("include/form_generator_helpers.php");
-include("include/authenticate.php");
-include("include/queries.php");
+include(__DIR__ . "/private/form_generator_helpers.php");
+include(__DIR__ . "/private/authenticate.php");
+include(__DIR__ . "/private/queries.php");
 
 $token = $_COOKIE['auth'];
 $is_jwt_valid = is_jwt_valid($token);
 
 if ($is_jwt_valid) {
-    $email = get_user_email($token);
-    $json = json_decode($_POST["gform"], true);
-    $title = $json["form_title"];
-    $description = $json["form_description"];
-    $counter = 0;
-
-    $content = $_POST["form-content"];
-    $rows = explode("\n", $content);
-
-
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $date = new DateTime();
-        $timestamp = $date->getTimestamp();
-        $filename = __DIR__ . "/generated/result_$timestamp.txt";
-        $json_settings = __DIR__ . "/generated/result_$timestamp.json";
-        if (!file_exists($filename)) {
-            $file = fopen($filename, "w") or die("Unable to open file.");
-            fwrite($file, trim($_POST["form-content"]));
-            fclose($file);
-        }
-        if (!file_exists($json_settings)) {
-            $file = fopen($json_settings, "w") or die("Unable to open file.");
-            $json_post = json_decode($_POST["gform"], true);
-            $json_post["creator"] = $email;
-            fwrite($file, trim(json_encode($json_post)));
-            fclose($file);
-        }
+        $email = get_user_email($token);
+        create_form_files($email);
+        header("location: index");
     }
 } else {
     header("location: login");

@@ -1,6 +1,6 @@
 <?php
-include("config.php");
-include("include/authenticate.php");
+include(__DIR__ . "/config.php");
+include(__DIR__ . "/private/authenticate.php");
 
 $token = $_COOKIE['auth'];
 $is_jwt_valid = is_jwt_valid($token);
@@ -34,12 +34,18 @@ if ($is_jwt_valid) {
   <meta charset="UTF-8" />
   <title>Home</title>
   <link href="css/home.css" rel="stylesheet" />
+  <link href="css/styles.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script type="text/javascript" src="js/index.js"></script>
   <script type="text/javascript" src="js/helpers.js"></script>
 </head>
 
 <body class="page">
+  <div id="open-user-menu" class="icon-wrapper" onclick="openModal()">
+    <i class="fa-user-circle icon"></i>
+  </div>
   <main>
-    <a href="forms" class="logo">
+    <a href="index" class="logo">
       <img src="assets/logo.png" />
     </a>
     <a href="generate_form" class="link">
@@ -66,6 +72,12 @@ if ($is_jwt_valid) {
       ?>
     </ol>
   </main>
+  <div id="background-overlay" class="overlay"></div>
+  <div id="modal" class="modal" onclick="logout()">
+    <div class="modal-content">
+      <p>Logout</p>
+    </div>
+  </div>
 </body>
 
 </html>

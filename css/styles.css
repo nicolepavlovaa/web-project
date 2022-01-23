@@ -1,8 +1,8 @@
 .page {
-  min-height: calc(100vh - 16px);
+  min-height: calc(100vh - 32px);
   display: flex;
   flex-direction: column;
-  background-image: linear-gradient(#bff098, #6fd6ff);
+  background-image: linear-gradient(#cefda5, #8fd3ee);
 }
 
 .logo {
@@ -115,8 +115,8 @@ label,
   border-radius: 8px;
   box-shadow: none;
 
-  background-color: #2ecc71;
-  color: #ecf0f1;
+  background-color: #1abd5e;
+  color: #f6f6f6;
 
   transition: background-color 0.3s;
 }
@@ -159,6 +159,7 @@ label,
   -webkit-font-smoothing: antialiased;
   color: white;
   cursor: pointer;
+  text-shadow: 3px 3px 0px rgba(0,0,0,0.2);
 }
 
 .overlay {
@@ -185,6 +186,8 @@ label,
   box-sizing: border-box;
   z-index: 9999;
   cursor: pointer;
+  font-family: "Rubik", sans-serif;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
 }
 
 .modal-content {
@@ -254,6 +257,12 @@ label,
 }
 [type="file"] + label.btn-2:hover::before {
   right: 75%;
+}
+
+.file {
+  height: 40px;
+  width: fit-content;
+  max-width: 350px;
 }
 
 body {

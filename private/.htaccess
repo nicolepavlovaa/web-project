@@ -1,0 +1,4 @@
+Order Allow,Deny
+<FilesMatch "^delete_form\.php$">
+Allow from all
+</FilesMatch>

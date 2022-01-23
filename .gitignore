@@ -1,8 +1,8 @@
-config.php
 /vendor/
 class,0,1,2,3,4,5,6,7,8
 .DS_Store
+env.php
 web_con.session.sql
 .vscode/settings.json
 form_settings
-generated
+generated/*

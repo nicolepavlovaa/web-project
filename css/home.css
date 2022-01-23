@@ -1,12 +1,5 @@
 @import url(https://fonts.googleapis.com/css?family=Montserrat:900|Raleway:400,400i,700,700i);
 
-ol.gradient-list > li,
-ol.gradient-list > li::before {
-  cursor: pointer;
-  box-shadow: 0.25rem 0.25rem 0.6rem rgba(0, 0, 0, 0.05),
-    0 0.5rem 1.125rem rgba(75, 0, 0, 0.05);
-}
-
 *,
 *:before,
 *:after {
@@ -26,6 +19,7 @@ main {
   display: flex;
   flex-direction: column;
   margin: 0 auto;
+  width: 40rem;
   max-width: 40rem;
   padding: 1rem;
 }
@@ -140,6 +134,13 @@ ol.gradient-list > li + li {
   margin-top: 2rem;
 }
 
+ol.gradient-list > li,
+ol.gradient-list > li::before {
+  cursor: pointer;
+  box-shadow: 0.25rem 0.25rem 0.6rem rgba(0, 0, 0, 0.05),
+    0 0.5rem 1.125rem rgba(75, 0, 0, 0.05);
+}
+
 .logo {
   align-self: center;
   max-width: 340px;
@@ -172,4 +173,16 @@ ol.gradient-list > li + li {
 
 .link {
   text-decoration: none;
+}
+
+.icon {
+  display: inline-block;
+  margin-right: 20px;
+  font: normal normal normal 40px/1 FontAwesome;
+  font-size: 40px;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  color: rgb(30, 115, 136);
+  cursor: pointer;
+  text-shadow: 3px 3px 0px rgba(0,0,0,0.2);
 }

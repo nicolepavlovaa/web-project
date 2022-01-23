@@ -1,47 +1,20 @@
 <?php
-include("config.php");
-include("include/authenticate.php");
-include("include/parsers.php");
-include("include/generate_components.php");
-include("include/queries.php");
-include("include/form_generator_helpers.php");
+include(__DIR__ . "/config.php");
+include(__DIR__ . "/private/authenticate.php");
+include(__DIR__ . "/private/parsers.php");
+include(__DIR__ . "/private/generate_components.php");
+include(__DIR__ . "/private/queries.php");
+include(__DIR__ . "/private/form_generator_helpers.php");
 
 $token = $_COOKIE['auth'];
 $is_jwt_valid = is_jwt_valid($token);
 
 if ($is_jwt_valid) {
-  $form_id = $_GET['form_id'];
-  $form_json = '';
-  $form_txt = '';
-  $files = scandir('generated/');
-
-  foreach ($files as $file) {
-    if ($file == "result_$form_id.txt") {
-      $form_txt = $file;
-    } elseif ($file == "result_$form_id.json") {
-      $form_json = $file;
-    }
-  }
-
-  $title = "";
-  $description = "";
-
-  $content = file_get_contents("generated/$form_txt");
-  $rows = explode("\n", $content);
-
-  $info = file_get_contents("generated/$form_json");
-  $json_content = json_decode($info, true);
-  $display_edit_button = false;
-
-  foreach ($json_content as $json_key => $value) {
-    if ($json_key == "form_title") {
-      $title = $value;
-    } elseif ($json_key == "form_description") {
-      $description = $value;
-    } elseif ($json_key == "creator" && $value == get_user_email($token)) {
-      $display_edit_button = true;
-    }
-  }
+  $content = load_form_contents($token);
+  $title = $content[0];
+  $description = $content[1];
+  $rows = $content[2];
+  $display_edit_button = $content[3];
 } else {
   header("location: login");
 }
@@ -54,17 +27,22 @@ if ($is_jwt_valid) {
   <meta charset="UTF-8" />
   <title>Form</title>
   <link href="css/styles.css" rel="stylesheet" />
-  <script type="text/javascript" srx="js/form.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script type="text/javascript" src="js/form.js"></script>
+  <script type="text/javascript" src="js/helpers.js"></script>
 </head>
 
 <body class="page">
-  <a href="forms" class="logo">
+  <div id="open-user-menu" class="icon-wrapper" onclick="openModal()">
+    <i class="fa-user-circle icon"></i>
+  </div>
+  <a href="index" class="logo">
     <img src="assets/logo.png" />
   </a>
+  <button id='delete-form' name='delete-form' onclick="deleteForm()" class='btn'>Delete form</button>
   <?php
   echo
   "<form id='form' class='form' method='POST'>
-    <button id='delete-form' onclick='deleteForm()' class='btn'>Delete form</button>
     <div class='description-wrapper'>
         <div class='input-title'>
             <p class='form-question'>$title</p>
@@ -83,6 +61,12 @@ if ($is_jwt_valid) {
     </div>
 </form>';
   ?>
+  <div id="background-overlay" class="overlay"></div>
+  <div id="modal" class="modal" onclick="logout()">
+    <div class="modal-content">
+      <p>Logout</p>
+    </div>
+  </div>
 </body>
 
 </html>

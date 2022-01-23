@@ -1,8 +1,8 @@
 <?php
-include("config.php");
-include("include/authenticate.php");
-include("include/parsers.php");
-include("include/queries.php");
+include(__DIR__ . "/config.php");
+include(__DIR__ . "/private/authenticate.php");
+include(__DIR__ . "/private/parsers.php");
+include(__DIR__ . "/private/queries.php");
 
 $token = $_COOKIE['auth'];
 $is_jwt_valid = is_jwt_valid($token);
@@ -42,7 +42,7 @@ if ($is_jwt_valid) {
   <div id="open-user-menu" class="icon-wrapper" onclick="openModal()">
     <i class="fa-user-circle icon"></i>
   </div>
-  <a href="forms" class="logo">
+  <a href="index" class="logo">
     <img src="assets/logo.png" />
   </a>
   <form id="form" class="form" method="POST">
