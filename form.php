@@ -5,6 +5,7 @@ include(__DIR__ . "/private/parsers.php");
 include(__DIR__ . "/private/generate_components.php");
 include(__DIR__ . "/private/queries.php");
 include(__DIR__ . "/private/form_generator_helpers.php");
+include(__DIR__ . "/private/export_form_result.php");
 
 $token = $_COOKIE['auth'];
 $is_jwt_valid = is_jwt_valid($token);
@@ -72,14 +73,14 @@ if ($is_jwt_valid) {
 </html>
 
 <?php
-$userid = 'tiliev';
-$gathered_stems_names = get_names_array($rows);
-
+$userid = get_user_email($token);
+$gathered_stems_names = get_names_array($rows); 
+$form_id = $_GET['form_id'];
 $t = time();
 $date = date('m/d/Y h:i:s a', $t);
-$result_form_answered = __DIR__ . "/answers/answer_" . $form_id . "" . $userid . "" . $t . ".csv";
+$result_form_answered = __DIR__ . "/answers/answer_" . $form_id . "_" . $userid . "_" . $t . ".csv";
 $file = fopen($result_form_answered, "w") or die("Unable to open file." . $result_form_answered);
-$data = [['form_id, stem, answer, answered_on, answered_by']];
+$data = [['form_id', 'stem', 'answer', 'answered_on', 'answered_by']];
 foreach ($gathered_stems_names as $i => $row) {
   $csv_stem = $row[0];
   $csv_answer = $_POST[$row[1]];

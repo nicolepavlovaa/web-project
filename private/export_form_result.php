@@ -2,7 +2,7 @@
 
 function get_names_array($rows)
 {
-  $gathered_stems_names = [[]];
+  $gathered_stems_names = [];
   foreach ($rows as $single_row_str) {
     $gathered_row = [];
     $single_row = explode(',', $single_row_str);
@@ -17,8 +17,6 @@ function get_names_array($rows)
       }
     }
     array_push($gathered_stems_names, $gathered_row);
-    var_dump($gathered_row);
-    echo '</br>';
   }
   return $gathered_stems_names;
 }
