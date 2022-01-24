@@ -1,3 +1,24 @@
+<?php
+include(__DIR__ . "/private/form_generator_helpers.php");
+include(__DIR__ . "/private/authenticate.php");
+include(__DIR__ . "/private/queries.php");
+
+$token = $_COOKIE['auth'];
+$is_jwt_valid = is_jwt_valid($token);
+
+if ($is_jwt_valid) {
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $email = get_user_email($token);
+        $errors = create_form_files($email);
+        if (count($errors) == 0) {
+            header("location: index");
+        }
+    }
+} else {
+    header("location: login");
+}
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -35,6 +56,19 @@
         </div>
         <button type="submit" name="submit" value="submit" class="btn">Generate</button>
     </form>
+    <span class=<?php if(sizeof($errors) == 0) {echo "";} else {echo "error"; }?>>
+        <?php
+        if (isset($errors)) {
+            $is_valid = sizeof($errors) == 0;
+            if (!$is_valid) {
+                foreach ($errors as $key => $value) {
+                    echo "<p class='error-msg'>$value</p>";
+                }
+            }
+            unset($errors);
+        }
+        ?>
+    </span>
     <div id="background-overlay" class="overlay"></div>
     <div id="modal" class="modal" onclick="logout()">
         <div class="modal-content">
@@ -44,23 +78,3 @@
 </body>
 
 </html>
-
-
-<?php
-include(__DIR__ . "/private/form_generator_helpers.php");
-include(__DIR__ . "/private/authenticate.php");
-include(__DIR__ . "/private/queries.php");
-
-$token = $_COOKIE['auth'];
-$is_jwt_valid = is_jwt_valid($token);
-
-if ($is_jwt_valid) {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $email = get_user_email($token);
-        create_form_files($email);
-        header("location: index");
-    }
-} else {
-    header("location: login");
-}
-?>

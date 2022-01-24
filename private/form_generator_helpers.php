@@ -1,23 +1,54 @@
 <?php
+function isJson($string)
+{
+  json_decode($string);
+  return json_last_error() === JSON_ERROR_NONE;
+}
+
 function create_form_files($email)
 {
+  $errors = [];
   $date = new DateTime();
   $timestamp = $date->getTimestamp();
   $filename = __DIR__ . "/../generated/result_$timestamp.txt";
   $json_settings = __DIR__ . "/../generated/result_$timestamp.json";
 
-  if (!file_exists($filename)) {
-    $file = fopen($filename, "w") or die("Unable to open file.");
-    fwrite($file, trim($_POST["form-content"]));
-    fclose($file);
+  $json_content = json_decode($_POST["gform"], true);
+  $title = "";
+
+  foreach ($json_content as $json_key => $value) {
+    if ($json_key == "form_title") {
+      $title = $value;
+    }
   }
-  if (!file_exists($json_settings)) {
-    $file = fopen($json_settings, "w") or die("Unable to open file.");
-    $json_post = json_decode($_POST["gform"], true);
-    $json_post["creator"] = $email;
-    fwrite($file, trim(json_encode($json_post)));
-    fclose($file);
+
+  if (trim($_POST["form-content"]) == "") {
+    $errors["content"] = "Content is required.";
   }
+
+  if (trim($title) == "") {
+    $errors["title"] = "Title is required.";
+  }
+
+  if (!isJson(trim($_POST["gform"]))) {
+    $errors["settings"] = "Please provide a valid JSON";
+  }
+
+  if (count($errors) == 0) {
+    if (!file_exists($filename)) {
+      $file = fopen($filename, "w") or die("Unable to open file.");
+      fwrite($file, trim($_POST["form-content"]));
+      fclose($file);
+    }
+    if (!file_exists($json_settings)) {
+      $file = fopen($json_settings, "w") or die("Unable to open file.");
+      $json_post = json_decode($_POST["gform"], true);
+      $json_post["creator"] = $email;
+      fwrite($file, trim(json_encode($json_post)));
+      fclose($file);
+    }
+  }
+  return $errors;
 }
 
 function load_form_contents($token)
@@ -64,6 +95,7 @@ function specialsplit($string, $char)
   $ret = array(''); // array to return
   $cur = 0;         // current index in the array to return, for convenience
 
+  // todo: add the possibility for a sentence with comma or ; using {}
   for ($i = 0; $i < strlen($string); $i++) {
     switch ($string[$i]) {
       case '{':
@@ -97,7 +129,7 @@ function getRowElements($row)
 
 function chooseClass($tag, $type)
 {
-  // add rest
+  //todo: add rest
   if ($tag == "textarea" || ($tag == "input" && ($type == "text" || $type == "password" || $type == "number" || $type == "email" || $type == "date" || $type == "month" || $type == "datetime-local"))) {
     return "input";
   }
@@ -107,9 +139,9 @@ function chooseClass($tag, $type)
   return "";
 }
 
-function getTypeValue($type)
+function getAttrValue($attr)
 {
-  return trim(explode('=', $type)[1], "'");
+  return trim(explode('=', $attr)[1], "'");
 }
 
 function split_inputs($rows)
@@ -127,6 +159,14 @@ function split_inputs($rows)
   return $result;
 }
 
+function valid_tag($tag, $type, $name, $src)
+{
+  if (($tag == "input" && $type != "" && $name != "") || ($tag == "img" && $src != "") || ($tag != "input" && $tag != "img")) {
+    return true;
+  }
+  return false;
+}
+
 function parser($rows)
 {
   global $counter;
@@ -140,55 +180,79 @@ function parser($rows)
     $name = '';
     $label = '';
     $value = '';
+    $href = '';
+    $style = '';
 
     foreach ($elements as $el) {
       $pair = specialsplit($el, '=');
 
       if (count($pair) == 2) {
         $key = trim($pair[0]);
-        $value = trim($pair[1]);
+        $val = trim($pair[1]);
 
-        // is this all? add styles
+        // todo: catch errors
         if ($key == "tag") {
-          $tag = $value;
+          $tag = $val;
         } elseif ($key == "stem") {
-          $stem = $value;
+          $trimmed = trim(trim($val), "}");
+          $trimmed = trim($trimmed, "{");
+          $stem = $trimmed;
         } elseif ($key == "type") {
-          $type = "$key='$value'";
+          $type = "$key='$val'";
         } elseif ($key == "src") {
-          $src = "$key='$value'";
+          $src = "$key='$val'";
         } elseif ($key == "name") {
-          $name = "$key='$value'";
+          $name = "$key='$val'";
         } elseif ($key == "label") {
-          $label = $value;
+          $label = $val;
         } elseif ($key == "value") {
-          $value = "$key='$value'";
+          $trimmed = trim(trim($val), "}");
+          $trimmed = trim($trimmed, "{");
+          $value = "$key='$trimmed'";
+        } elseif ($key == "href") {
+          $href = "$key='$val'";
+        } elseif ($key == "style") {
+          $trimmed = trim(trim($val), "}");
+          $trimmed = trim($trimmed, "{");
+          $style = "$key='$trimmed'";
         }
       }
     }
-    $class = chooseClass($tag, getTypeValue($type));
+
+    $class = chooseClass($tag, getAttrValue($type));
     $class_attr = $class == "" ?: "class='$class'";
-    $el = "<$tag $type id='el-$counter' $class_attr $name $src $value></$tag>";
-    if ($tag != '') {
-      $result = $result . "<p class='form-question-title'>$stem</p>";
-      if ($label != "" && !($tag == "input" && getTypeValue($type) == "radio")) {
-        $class = chooseClass("label", getTypeValue($type));
-        $class_name = $class == "" ? "class='form__label'" : "class='$class'";
-        $label_el = "<label $class_name for='el-$counter'>$label</label>";
-        $result = $result . $label_el;
+    $el = "<$tag $type id='el-$counter' $class_attr $name $src $value $href $style></$tag>";
+
+    if ($tag != "") {
+      if ($stem != "") {
+        $result = $result . "<p class='form-question-title'>$stem</p>";
       }
-      if ($tag == "input" && getTypeValue($type) == "radio") {
-        $result = $result . "<div class='radio'>";
-        $result = $result . $el;
-        $counter++;
-        if ($label != '') {
-          $label_el = "<label class='form__label' for='el-$counter'>$label</label>";
+
+      if($tag == "p"){
+        $p_val = getAttrValue($val);
+        $el = "<$tag id='el-$counter' $class_attr $href $style>$p_val</$tag>";
+      }
+
+      if (valid_tag($tag, getAttrValue($type), getAttrValue($name), getAttrValue($src))) {
+        if ($label != "" && !($tag == "input" && getAttrValue($type) == "radio")) {
+          $class = chooseClass("label", getAttrValue($type));
+          $class_name = $class == "" ? "class='form__label'" : "class='$class'";
+          $label_el = "<label $class_name for='el-$counter'>$label</label>";
           $result = $result . $label_el;
         }
-        $result = $result . "</div>";
-      } else {
-        $result = $result . $el;
-        $counter++;
+        if ($tag == "input" && getAttrValue($type) == "radio") {
+          $result = $result . "<div class='radio'>";
+          $result = $result . $el;
+          $counter++;
+          if ($label != '') {
+            $label_el = "<label class='form__label' for='el-$counter'>$label</label>";
+            $result = $result . $label_el;
+          }
+          $result = $result . "</div>";
+        } else {
+          $result = $result . $el;
+          $counter++;
+        }
       }
     }
   }
