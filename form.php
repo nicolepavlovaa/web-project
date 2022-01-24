@@ -70,3 +70,23 @@ if ($is_jwt_valid) {
 </body>
 
 </html>
+
+<?php
+$userid = 'tiliev';
+$gathered_stems_names = get_names_array($rows);
+
+$t = time();
+$date = date('m/d/Y h:i:s a', $t);
+$result_form_answered = __DIR__ . "/answers/answer_" . $form_id . "" . $userid . "" . $t . ".csv";
+$file = fopen($result_form_answered, "w") or die("Unable to open file." . $result_form_answered);
+$data = [['form_id, stem, answer, answered_on, answered_by']];
+foreach ($gathered_stems_names as $i => $row) {
+  $csv_stem = $row[0];
+  $csv_answer = $_POST[$row[1]];
+  $csv_row = array($form_id, $csv_stem, $csv_answer, $date, $userid);
+  array_push($data, $csv_row);
+}
+foreach ($data as $row) {
+  fputcsv($file, $row);
+}
+fclose($file);
