@@ -4,7 +4,7 @@
 $_ENV["SERVERNAME"] = "...";
 $_ENV["USERNAME"] = "...";
 $_ENV["PASSWORD"] = "...";
-$_ENV["DATABASE"] = "...";
+$_ENV["DATABASE"] = "webProject";
 ```
 
 ### 2. Start MySQL and Apache
