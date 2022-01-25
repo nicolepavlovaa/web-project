@@ -8,8 +8,9 @@ $_ENV["DATABASE"] = "...";
 ```
 
 ### 2. Start MySQL and Apache
-### 2.1 Open the sql terminal and run this script:
 
+#### 2.1. Open the sql terminal and run this script:
+```
 CREATE SCHEMA IF NOT EXISTS webProject DEFAULT CHARACTER SET utf8 ;
 USE webProject ;
 
@@ -76,8 +77,13 @@ CREATE TABLE IF NOT EXISTS webProject.`form_results` (
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+```
 
-### 3. Go to `http://localhost:8080/``
+### 3. Configure the Apache port to be 8080
+
+#### 3.1. Create directories - 'answer' and 'generated'
+
+#### 3.2. Go to `http://localhost:8080/``
 
 ### 4. A form can be generated when you click 'Create new form'. You can upload a settings.json file and a form.txt file.
 
