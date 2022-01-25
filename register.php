@@ -2,7 +2,7 @@
 include(__DIR__ . "/config.php");
 include(__DIR__ . "/private/parsers.php");
 include(__DIR__ . "/private/queries.php");
-include(__DIR__ . "/private/parsers.php");
+
 
 // Define variables and initialize with empty values
 $email = $password = $confirm_password = "";

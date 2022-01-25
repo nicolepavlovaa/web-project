@@ -16,11 +16,14 @@ function create_form_files($email)
   $json_content = json_decode($_POST["gform"], true);
   $title = "";
 
-  foreach ($json_content as $json_key => $value) {
-    if ($json_key == "form_title") {
-      $title = $value;
+  if ($json_content != null) {
+    foreach ($json_content as $json_key => $value) {
+      if ($json_key == "form_title") {
+        $title = $value;
+      }
     }
   }
+
 
   if (trim($_POST["form-content"]) == "") {
     $errors["content"] = "Content is required.";
@@ -141,7 +144,11 @@ function chooseClass($tag, $type)
 
 function getAttrValue($attr)
 {
-  return trim(explode('=', $attr)[1], "'");
+  $arr = explode('=', $attr);
+  $res="";
+  if(count($arr)>=2){
+  $res = trim(explode('=', $attr)[1], "'");}
+  return $res;
 }
 
 function split_inputs($rows)

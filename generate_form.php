@@ -56,7 +56,7 @@ if ($is_jwt_valid) {
         </div>
         <button type="submit" name="submit" value="submit" class="btn">Generate</button>
     </form>
-    <span class=<?php if(sizeof($errors) == 0) {echo "";} else {echo "error"; }?>>
+    <span class=<?php if(isset($errors) && sizeof($errors) == 0) {echo "";} elseif(isset($errors) && sizeof($errors) > 0) {echo "error"; }?>>
         <?php
         if (isset($errors)) {
             $is_valid = sizeof($errors) == 0;
