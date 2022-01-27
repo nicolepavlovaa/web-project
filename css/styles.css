@@ -349,3 +349,14 @@ a {
 .error-msg {
   margin: 2px;
 }
+
+.list-text {
+  font-family: "Rubik", sans-serif;
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+.list-subtext {
+  font-size: 14px;
+  color: #565656;
+}

@@ -60,8 +60,12 @@ if ($is_jwt_valid) {
             $json_file = $filename;
           }
         }
+
         $title = "";
+        $description = "";
+        $creator = "";
         $function = "openForm";
+
         $file = file_get_contents("generated/$json_file");
         $json_content = json_decode($file, true);
 
@@ -70,9 +74,18 @@ if ($is_jwt_valid) {
             $title = $value;
           } elseif ($json_key == "password") {
             $function = "openLoginForm";
+          } elseif ($json_key == "form_description") {
+            $description = $value;
+          } elseif ($json_key == "creator") {
+            $creator = $value;
           }
         }
-        echo "<li onclick='$function($key);' id=$key>$title</li>";
+
+        echo "<li onclick='$function($key);' id=$key>
+                <p class='list-text'>$title</p>
+                <p class='list-text list-subtext'>Description: $description</p>
+                <p class='list-text list-subtext'>Creator: $creator</p>
+              </li>";
       }
       ?>
     </ol>
