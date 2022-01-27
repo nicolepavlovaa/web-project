@@ -60,14 +60,19 @@ if ($is_jwt_valid) {
             $json_file = $filename;
           }
         }
-
+        $title = "";
+        $function = "openForm";
         $file = file_get_contents("generated/$json_file");
         $json_content = json_decode($file, true);
+
         foreach ($json_content as $json_key => $value) {
           if ($json_key == "form_title") {
-            echo "<li onclick='openForm($key);' id=$key>$value</li>";
+            $title = $value;
+          } elseif ($json_key == "password") {
+            $function = "openLoginForm";
           }
         }
+        echo "<li onclick='$function($key);' id=$key>$title</li>";
       }
       ?>
     </ol>

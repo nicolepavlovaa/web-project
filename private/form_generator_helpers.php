@@ -78,6 +78,8 @@ function load_form_contents($token)
   $info = file_get_contents("generated/$form_json");
   $json_content = json_decode($info, true);
   $display_edit_button = false;
+  $has_password = false;
+  $password = "";
 
   foreach ($json_content as $json_key => $value) {
     if ($json_key == "form_title") {
@@ -86,10 +88,13 @@ function load_form_contents($token)
       $description = $value;
     } elseif ($json_key == "creator" && $value == get_user_email($token)) {
       $display_edit_button = true;
+    } elseif ($json_key == "password") {
+      $has_password = true;
+      $password = $value;
     }
   }
 
-  return [$title, $description, $rows, $display_edit_button];
+  return [$title, $description, $rows, $display_edit_button, $has_password, $password];
 }
 
 function specialsplit($string, $char)
@@ -145,9 +150,10 @@ function chooseClass($tag, $type)
 function getAttrValue($attr)
 {
   $arr = explode('=', $attr);
-  $res="";
-  if(count($arr)>=2){
-  $res = trim(explode('=', $attr)[1], "'");}
+  $res = "";
+  if (count($arr) >= 2) {
+    $res = trim(explode('=', $attr)[1], "'");
+  }
   return $res;
 }
 
@@ -235,7 +241,7 @@ function parser($rows)
         $result = $result . "<p class='form-question-title'>$stem</p>";
       }
 
-      if($tag == "p"){
+      if ($tag == "p") {
         $p_val = getAttrValue($val);
         $el = "<$tag id='el-$counter' $class_attr $href $style>$p_val</$tag>";
       }

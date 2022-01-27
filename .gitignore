@@ -5,5 +5,6 @@ env.php
 web_con.session.sql
 .vscode/settings.json
 form_settings
-generated/*
-answers/*
+generated/*.json
+generated/*.txt
+answers/*.csv
