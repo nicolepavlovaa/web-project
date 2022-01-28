@@ -153,7 +153,6 @@ function getRowElements($row)
 
 function chooseClass($tag, $type)
 {
-  //todo: add rest
   if ($tag == "textarea" || ($tag == "input" && ($type == "text" || $type == "password" || $type == "number" || $type == "email" || $type == "date" || $type == "month" || $type == "datetime-local"))) {
     return "input";
   }

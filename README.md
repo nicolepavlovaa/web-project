@@ -112,3 +112,9 @@ stem=choose file,tag=input,type=file,name=file
   "override_answers": true
 }
 ```
+
+### Added:
+- Display form description, date last edited and creator in index page.
+- The creator of a form has the ability to edit the form.
+- A user can be asked to enter a password in order to open a form.
+- 'results' and 'generated' folders are now private.
