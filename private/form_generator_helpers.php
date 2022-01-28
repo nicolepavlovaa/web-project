@@ -37,6 +37,21 @@ function create_form_files($email)
     $errors["settings"] = "Please provide a valid JSON";
   }
 
+  $id = $_GET['form_id'];
+  if ($id != null) {
+    if (is_file(__DIR__ . "/../generated/result_$id.json")) {
+      unlink(__DIR__ . "/../generated/result_$id.json") or die('An error occurred while deleting the json file.');
+    } else {
+      die("File with id $id does not exist.");
+    }
+
+    if (is_file(__DIR__ . "/../generated/result_$id.txt")) {
+      unlink(__DIR__ . "/../generated/result_$id.txt") or die('An error occurred while deleting the txt file.');
+    } else {
+      die("File with id $id does not exist.");
+    }
+  }
+
   if (count($errors) == 0) {
     if (!file_exists($filename)) {
       $file = fopen($filename, "w") or die("Unable to open file.");
@@ -47,6 +62,7 @@ function create_form_files($email)
       $file = fopen($json_settings, "w") or die("Unable to open file.");
       $json_post = json_decode($_POST["gform"], true);
       $json_post["creator"] = $email;
+      $json_post["last_edit"] = date("l jS \of F Y h:i:s A");
       fwrite($file, trim(json_encode($json_post)));
       fclose($file);
     }

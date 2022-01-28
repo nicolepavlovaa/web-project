@@ -55,6 +55,7 @@
   padding: 7px 0;
   background: transparent;
   transition: border-color 0.2s;
+  margin-bottom: 16px;
 }
 
 .textarea {
@@ -119,6 +120,27 @@ label,
   color: #f6f6f6;
 
   transition: background-color 0.3s;
+}
+
+.btn-small {
+  display: block;
+  margin: 16px auto;
+  padding: 0;
+  width: 100px;
+  height: 25px;
+  font-size: 14px;
+  font-weight: 650;
+
+  overflow: hidden;
+  cursor: pointer;
+
+  border-width: 0;
+  outline: none;
+  border-radius: 8px;
+  box-shadow: none;
+
+  background-color: #1abd5e;
+  color: #f6f6f6;
 }
 
 .buttons-and-text {
@@ -263,6 +285,7 @@ label,
   height: 40px;
   width: fit-content;
   max-width: 350px;
+  margin-bottom: 16px;
 }
 
 body {

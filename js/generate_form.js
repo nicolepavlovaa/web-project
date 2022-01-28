@@ -1,7 +1,31 @@
-window.addEventListener("load", function () {
+window.addEventListener("load", async function () {
   fileInput = document.getElementById("file-input");
   fileInput2 = document.getElementById("file-input-2");
   let reader = new FileReader();
+
+  let params = (new URL(document.location)).searchParams;
+  let form_id = params.get("form_id");
+
+  if (form_id !== null) {
+    let path = window.location.pathname;
+    let directory = path.substring(path.indexOf('/'), path.lastIndexOf('/'));
+    let urlBase = directory == '/' ? '' : directory;
+
+    var formData = new FormData();
+    formData.append('id', form_id);
+
+    const response = await fetch(
+      `..${urlBase}/private/load_files.php`,
+      {
+        method: 'POST',
+        body: formData,
+      }
+    );
+    const data = JSON.parse(await response.text());
+
+    document.getElementById('gform').value = JSON.stringify(data.json, null, 2);
+    document.getElementById('form-content').value = data.txt;
+  }
 
   fileInput.onchange = function (event) {
     let fileList = fileInput.files;

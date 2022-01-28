@@ -64,6 +64,7 @@ if ($is_jwt_valid) {
         $title = "";
         $description = "";
         $creator = "";
+        $last_edit = "";
         $function = "openForm";
 
         $file = file_get_contents("generated/$json_file");
@@ -78,13 +79,21 @@ if ($is_jwt_valid) {
             $description = $value;
           } elseif ($json_key == "creator") {
             $creator = $value;
+          } elseif ($json_key == "last_edit") {
+            $last_edit = $value;
           }
         }
 
-        echo "<li onclick='$function($key);' id=$key>
-                <p class='list-text'>$title</p>
-                <p class='list-text list-subtext'>Description: $description</p>
-                <p class='list-text list-subtext'>Creator: $creator</p>
+        $edit_button = trim($creator) == get_user_email($token) ? "<button class='btn-small' onClick='editForm($key)'>Edit</button>" : '';
+
+        echo "<li id=$key>
+                <div onclick='$function($key)'>
+                  <p class='list-text'>$title</p>
+                  <p class='list-text list-subtext'>Description: $description</p>
+                  <p class='list-text list-subtext'>Creator: $creator</p>
+                  <p class='list-text list-subtext'>Last edited: $last_edit</p>
+                </div>
+                $edit_button
               </li>";
       }
       ?>

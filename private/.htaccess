@@ -1,4 +1,10 @@
-Order Allow,Deny
-<FilesMatch "^delete_form\.php$">
-Allow from all
-</FilesMatch>
+Order deny,allow
+Deny from all
+
+<Files "delete_form.php">
+    Allow from all
+</Files>
+
+<Files "load_files.php">
+    Allow from all
+</Files>
