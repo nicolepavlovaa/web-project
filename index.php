@@ -54,39 +54,40 @@ if ($is_jwt_valid) {
     <ol id="forms" class="gradient-list">
       <?php
       foreach ($pairs as $key => $value) {
-        $json_file = '';
-        foreach ($value as $filename) {
-          if (explode(".", $filename)[1] == "json") {
-            $json_file = $filename;
+        if ($key != '') {
+          $json_file = '';
+          foreach ($value as $filename) {
+            if (explode(".", $filename)[1] == "json") {
+              $json_file = $filename;
+            }
           }
-        }
 
-        $title = "";
-        $description = "";
-        $creator = "";
-        $last_edit = "";
-        $function = "openForm";
+          $title = "";
+          $description = "";
+          $creator = "";
+          $last_edit = "";
+          $function = "openForm";
 
-        $file = file_get_contents("generated/$json_file");
-        $json_content = json_decode($file, true);
+          $file = file_get_contents("generated/$json_file");
+          $json_content = json_decode($file, true);
 
-        foreach ($json_content as $json_key => $value) {
-          if ($json_key == "form_title") {
-            $title = $value;
-          } elseif ($json_key == "password") {
-            $function = "openLoginForm";
-          } elseif ($json_key == "form_description") {
-            $description = $value;
-          } elseif ($json_key == "creator") {
-            $creator = $value;
-          } elseif ($json_key == "last_edit") {
-            $last_edit = $value;
+          foreach ($json_content as $json_key => $value) {
+            if ($json_key == "form_title") {
+              $title = $value;
+            } elseif ($json_key == "password") {
+              $function = "openLoginForm";
+            } elseif ($json_key == "form_description") {
+              $description = $value;
+            } elseif ($json_key == "creator") {
+              $creator = $value;
+            } elseif ($json_key == "last_edit") {
+              $last_edit = $value;
+            }
           }
-        }
 
-        $edit_button = trim($creator) == get_user_email($token) ? "<button class='btn-small' onClick='editForm($key)'>Edit</button>" : '';
+          $edit_button = trim($creator) == get_user_email($token) ? "<button class='btn-small' onClick='editForm($key)'>Edit</button>" : '';
 
-        echo "<li id=$key>
+          echo "<li id=$key>
                 <div onclick='$function($key)'>
                   <p class='list-text'>$title</p>
                   <p class='list-text list-subtext'>Description: $description</p>
@@ -95,6 +96,7 @@ if ($is_jwt_valid) {
                 </div>
                 $edit_button
               </li>";
+        }
       }
       ?>
     </ol>

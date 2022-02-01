@@ -256,9 +256,9 @@ function parser($rows)
         $result = $result . "<p class='form-question-title'>$stem</p>";
       }
 
-      if ($tag == "p") {
+      if ($tag == "p" || $tag == "a") {
         $p_val = getAttrValue($val);
-        $el = "<$tag id='el-$counter' $class_attr $href $style>$p_val</$tag>";
+        $el = "<$tag id='el-$counter' $class_attr $href $style $src>$p_val</$tag>";
       }
 
       if (valid_tag($tag, getAttrValue($type), getAttrValue($name), getAttrValue($src))) {
