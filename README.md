@@ -83,7 +83,7 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 #### 4. Configure the Apache port to be 8080
 
-#### 5. Create directories - 'answer' and 'generated'
+#### 5. Create directories - 'answers' and 'generated'
 
 #### 6. Go to `http://localhost:8080/index`
 
