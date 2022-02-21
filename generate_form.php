@@ -49,10 +49,8 @@ if ($is_jwt_valid) {
             <p class="form-question filename" id="filename-2"></p>
         </div>
         <div class="textarea-container">
-            <textarea class="textarea" id="gform" name="gform" rows="30" cols="120">
-            </textarea>
-            <textarea class="textarea" id="form-content" name="form-content" rows="30" cols="300">
-            </textarea>
+            <textarea class="textarea" id="gform" name="gform" rows="30" cols="120"></textarea>
+            <textarea class="textarea" id="form-content" name="form-content" rows="30" cols="300"></textarea>
         </div>
         <button type="submit" name="submit" value="submit" class="btn">Generate</button>
     </form>

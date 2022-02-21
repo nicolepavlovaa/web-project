@@ -127,7 +127,7 @@ stem=choose file,tag=input,type=file,name=file,label=mylabel
   "form_description": "Description",
   "creator": "npavlova@gmail.com",
   "created": "Friday 28th of January 2022 01:20:25 AM",
-  "password": "12345",
+  "password": "12345"
 }
 ```
 
